@@ -10,39 +10,55 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) var context
-    @Query(sort: \Todo.date) var todos: [Todo]
+    @Query(sort: [
+        SortDescriptor(\Todo.dueDate, order: .reverse),
+        SortDescriptor(\Todo.lastModifiedDate, order: .reverse)
+    ]) var todos: [Todo]
     @FocusState private var focusedUUID: UUID?
     
     var body: some View {
         NavigationStack {
             VStack {
-                List {
-                    ForEach(todos) { item in
-                        TodoItemView(todoItem: item, focusedID: $focusedUUID)
-                       
-                    }
-                    .onDelete { indexSet in
-                        for index in indexSet {
-                            let todoToDelete = todos[index]
-                            context.delete(todoToDelete)
-                        }
-                    }
-                    Button("Add Todo") {
-                        withAnimation {
-                            let newTodo = Todo(text: "")
-                            do {
-                                context.insert(newTodo)
-                                print("todo id: \(newTodo.id)")
-                                try context.save()
-                                focusedUUID = newTodo.id
-                            } catch {
-                                print("Failed to save context: \(error)")
-                            }
-                        }
-                    }
-                }
+                list
             }
             .navigationTitle("Todo List")
+        }
+    }
+    
+    var list: some View {
+        List {
+            ForEach(todos) { item in
+                TodoItemView(todoItem: item, focusedID: $focusedUUID)
+               
+            }
+            .onDelete { indexSet in
+                for index in indexSet {
+                    let todoToDelete = todos[index]
+                    context.delete(todoToDelete)
+                }
+            }
+            addButton
+        }
+    }
+    
+    var addButton: some View {
+        Button("Add Todo") {
+            withAnimation {
+                createTodo()
+            }
+        }
+    }
+    
+    private func createTodo() {
+        let newTodo = Todo()
+        do {
+            context.insert(newTodo)
+            try context.save()
+            
+            // set focus to newly created item, pop up keyboard in TodoItemView
+            focusedUUID = newTodo.id
+        } catch {
+            print("Failed to save context: \(error)")
         }
     }
 }

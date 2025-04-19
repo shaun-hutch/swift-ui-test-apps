@@ -11,17 +11,20 @@ import SwiftData
 @Model
 class Todo: Identifiable {
     @Attribute(.unique) var id: UUID
-    var date: Date
+    var dueDate: Date?
+    var lastModifiedDate: Date
     var text: String
     var isCompleted: Bool
     
-    init(id: UUID = UUID(), date: Date = Date(), text: String, isCompleted: Bool = false) {
+    init(id: UUID = UUID(), dueDate: Date? = nil, lastModifiedDate: Date = Date(), text: String = "", isCompleted: Bool = false) {
         self.id = id
-        self.date = date
+        self.dueDate = dueDate
+        self.lastModifiedDate = lastModifiedDate
         self.text = text
         self.isCompleted = isCompleted
     }
-    
+        
+
     func toggle() {
         print("toggling")
         isCompleted.toggle()
@@ -30,8 +33,8 @@ class Todo: Identifiable {
 
 extension Todo {
     static var SampleData = [
-        Todo(text: "test", isCompleted: false),
-        Todo(text: "test2", isCompleted: true),
-        Todo(text: "test3", isCompleted: false)
+        Todo(text: "test"),
+        Todo(text: "test2"),
+        Todo(text: "test3")
     ]
 }
