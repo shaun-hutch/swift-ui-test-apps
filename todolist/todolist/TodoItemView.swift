@@ -8,29 +8,36 @@
 import SwiftUI
 
 struct TodoItemView: View {
-    @Binding var todoItem: Todo
-    @FocusState private var textFieldfocused: Bool
+    @Bindable var todoItem: Todo
+    @FocusState.Binding var focusedID: UUID?
+    
+    @Environment(\.modelContext) var context
     
     var body: some View {
         HStack {
             Button(action: {
                 todoItem.toggle()
             }) {
-                Image(systemName: todoItem.isCompleted ? "circle" : "checkmark.circle.fill")
+                Image(systemName: todoItem.isCompleted ? "checkmark.circle.fill" : "circle")
                     .font(.title2)
                     
             }
             
             TextField("Add Todo", text: $todoItem.text)
-                .focused($textFieldfocused)
+                .focused($focusedID, equals: todoItem.id)
                 .submitLabel(.done)
                 .onSubmit {
-                    textFieldfocused = false
+                    focusedID = nil
                 }
         }
+        .onChange(of: focusedID) { oldValue, newValue in
+            if newValue == nil {
+                do {
+                    try context.save()
+                } catch {
+                    print("Failed to save changes: \(error)")
+                }
+            }
+        }
     }
-}
-
-#Preview {
-    TodoItemView(todoItem: .constant(Todo.SampleData[0]))
 }

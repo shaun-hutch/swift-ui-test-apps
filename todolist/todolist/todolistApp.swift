@@ -19,7 +19,7 @@ struct todolistApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(items: Todo.SampleData)
+            ContentView()
         }
         .modelContainer(container)
     }

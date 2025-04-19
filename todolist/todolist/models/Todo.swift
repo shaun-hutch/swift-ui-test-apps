@@ -15,7 +15,7 @@ class Todo: Identifiable {
     var text: String
     var isCompleted: Bool
     
-    init(id: UUID = UUID(), date: Date = Date(), text: String, isCompleted: Bool) {
+    init(id: UUID = UUID(), date: Date = Date(), text: String, isCompleted: Bool = false) {
         self.id = id
         self.date = date
         self.text = text
