@@ -9,25 +9,27 @@ import Foundation
 import SwiftData
 
 @Model
-class Todo: Identifiable {
+final class Todo: Identifiable {
     @Attribute(.unique) var id: UUID
     var dueDate: Date?
     var lastModifiedDate: Date
     var text: String
     var isCompleted: Bool
     
-    init(id: UUID = UUID(), dueDate: Date? = nil, lastModifiedDate: Date = Date(), text: String = "", isCompleted: Bool = false) {
+    // property to sort boolean with
+    var isCompletedInt: Int
+
+    func updateLastModifiedDate() {
+        lastModifiedDate = Date()
+    }
+    
+    init(id: UUID = UUID(), dueDate: Date? = nil, lastModifiedDate: Date = Date(), text: String = "", isCompleted: Bool = false, isCompletedInt: Int = 0) {
         self.id = id
         self.dueDate = dueDate
         self.lastModifiedDate = lastModifiedDate
         self.text = text
         self.isCompleted = isCompleted
-    }
-        
-
-    func toggle() {
-        print("toggling")
-        isCompleted.toggle()
+        self.isCompletedInt = isCompleted ? 1 : 0
     }
 }
 
@@ -36,5 +38,5 @@ extension Todo {
         Todo(text: "test"),
         Todo(text: "test2"),
         Todo(text: "test3")
-    ]
+    ]    
 }

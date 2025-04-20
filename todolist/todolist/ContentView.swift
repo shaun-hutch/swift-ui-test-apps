@@ -11,8 +11,8 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) var context
     @Query(sort: [
-        SortDescriptor(\Todo.dueDate, order: .reverse),
-        SortDescriptor(\Todo.lastModifiedDate, order: .reverse)
+        SortDescriptor(\Todo.isCompletedInt, order: .reverse),
+        SortDescriptor(\Todo.lastModifiedDate, order: .reverse),
     ]) var todos: [Todo]
     @FocusState private var focusedUUID: UUID?
     
@@ -20,6 +20,12 @@ struct ContentView: View {
         NavigationStack {
             VStack {
                 list
+            }
+            .onChange(of: focusedUUID) { oldValue, newValue in
+                withAnimation {
+                    focusChangeHandler(oldValue: oldValue, newValue: newValue)
+                }
+
             }
             .navigationTitle("Todo List")
         }
@@ -29,7 +35,6 @@ struct ContentView: View {
         List {
             ForEach(todos) { item in
                 TodoItemView(todoItem: item, focusedID: $focusedUUID)
-               
             }
             .onDelete { indexSet in
                 for index in indexSet {
@@ -60,6 +65,27 @@ struct ContentView: View {
         } catch {
             print("Failed to save context: \(error)")
         }
+    }
+    
+    // save on focus loss
+    private func focusChangeHandler(oldValue: UUID?, newValue: UUID?) {
+        print("focus handler")
+        
+        // update the previous todo last modified date on focus loss
+        if let oldValue {
+            let todoToSave = todos.first { $0.id == oldValue }
+            if let todoToSave {
+                print("updating last modified")
+                todoToSave.updateLastModifiedDate()
+            }
+        }
+
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save changes: \(error)")
+        }
+        
     }
 }
 
