@@ -18,22 +18,10 @@ struct TodoItemView: View {
     @Environment(\.modelContext) var context
     
     var body: some View {
-        VStack {
-            HStack {
-                toggleButton
-                textField
-            }
-        }
-    }
-    
-    var toggleButton: some View {
-        Button(action: {
-            withAnimation {
-                updateToggle()
-            }
-        }) {
-            Image(systemName: todoItem.isCompleted ? "checkmark.circle.fill" : "circle")
-                .font(.title2)
+        HStack {
+            toggleButton
+            textField
+            dateButton
         }
     }
     
@@ -45,6 +33,31 @@ struct TodoItemView: View {
                 focusedID = nil
             }
     }
+    
+    var toggleButton: some View {
+        Button(action: {
+            withAnimation {
+                print("tapped toggle button")
+                updateToggle()
+            }
+        }) {
+            Image(systemName: todoItem.isCompleted ? "checkmark.circle.fill" : "circle")
+                .font(.title2)
+        }
+        .buttonStyle(.borderless)
+    }
+    
+    var dateButton: some View {
+        Button(action: {
+            print("tapped date button")
+        }) {
+            Image(systemName: "bell")
+                .font(.title2)
+        }
+        .buttonStyle(.borderless)
+    }
+    
+    // todo date picker field (full or wheel?)
     
     private func updateToggle() {
         todoItem.isCompleted.toggle()
