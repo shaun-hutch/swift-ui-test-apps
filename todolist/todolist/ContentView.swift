@@ -12,7 +12,7 @@ struct ContentView: View {
     @Environment(\.modelContext) var context
     @Query(sort: [
         SortDescriptor(\Todo.isCompletedInt, order: .reverse),
-        SortDescriptor(\Todo.lastModifiedDate, order: .reverse),
+        SortDescriptor(\Todo.dueDate, order: .forward),
     ]) var todos: [Todo]
     @FocusState private var focusedUUID: UUID?
     

@@ -17,11 +17,26 @@ struct TodoItemView: View {
     // context to make changes
     @Environment(\.modelContext) var context
     
+    @State private var datePickerOpened = false
+    
     var body: some View {
-        HStack {
-            toggleButton
-            textField
-            dateButton
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                toggleButton
+                textField
+                Spacer()
+                dateButton
+            }
+        }
+        .sheet(isPresented: $datePickerOpened) {
+            TodoDatePicker(initialDate: $todoItem.dueDate)
+        }
+        .onChange(of: datePickerOpened) {
+            if (datePickerOpened == false) {
+                withAnimation {
+                    todoItem.updateLastModifiedDate()
+                }
+            }
         }
     }
     
@@ -37,27 +52,28 @@ struct TodoItemView: View {
     var toggleButton: some View {
         Button(action: {
             withAnimation {
-                print("tapped toggle button")
                 updateToggle()
             }
         }) {
             Image(systemName: todoItem.isCompleted ? "checkmark.circle.fill" : "circle")
-                .font(.title2)
         }
+        // this confines the tappable bounds of the button so they can be individually tapped in a list item
         .buttonStyle(.borderless)
     }
     
     var dateButton: some View {
         Button(action: {
-            print("tapped date button")
+            datePickerOpened.toggle()
         }) {
-            Image(systemName: "bell")
-                .font(.title2)
+            HStack {
+                Text(todoItem.dueDate?.formatted(Date.FormatStyle.dateTime.day().month()) ?? "")
+                    .font(.footnote)
+                Image(systemName: todoItem.dueDate != nil ? "bell.badge.fill" : "bell")
+            }
+            .padding(0)
         }
         .buttonStyle(.borderless)
     }
-    
-    // todo date picker field (full or wheel?)
     
     private func updateToggle() {
         todoItem.isCompleted.toggle()
@@ -70,7 +86,7 @@ struct TodoItemView: View {
 #Preview {
     struct PreviewWrapper: View {
         // mock data for preview (needed focus state declaration and view wrapper to preview correctly)
-        @State private var todoItem = Todo(text: "Buy groceries")
+        @State private var todoItem = Todo(dueDate: Date(), text: "Buy groceries")
         @FocusState private var focusedID: UUID?
 
         var body: some View {
@@ -79,5 +95,6 @@ struct TodoItemView: View {
     }
 
     return PreviewWrapper()
-        .modelContainer(for: Todo.self) // This adds an in-memory SwiftData context for previews
+        .modelContainer(for: Todo.self)  // This adds an in-memory SwiftData context for previews
+        .padding()
 }
