@@ -20,13 +20,11 @@ struct TodoItemView: View {
     @State private var datePickerOpened = false
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack {
-                toggleButton
-                textField
-                Spacer()
-                dateButton
-            }
+        HStack {
+            toggleButton
+            textField
+            Spacer()
+            dateButton
         }
         .sheet(isPresented: $datePickerOpened) {
             TodoDatePicker(initialDate: $todoItem.dueDate)
@@ -38,6 +36,7 @@ struct TodoItemView: View {
                 }
             }
         }
+        .listRowSeparator(.hidden)
     }
     
     var textField: some View {
@@ -70,7 +69,6 @@ struct TodoItemView: View {
                     .font(.footnote)
                 Image(systemName: todoItem.dueDate != nil ? "bell.badge.fill" : "bell")
             }
-            .padding(0)
         }
         .buttonStyle(.borderless)
     }

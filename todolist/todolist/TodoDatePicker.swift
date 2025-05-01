@@ -28,7 +28,7 @@ struct TodoDatePicker: View {
                     selectedDate = initialDate
                 }
             }
-            .presentationDetents([.medium])
+            .presentationDetents([.height(400)])
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
