@@ -28,19 +28,26 @@ struct TodoDatePicker: View {
                     selectedDate = initialDate
                 }
             }
-            .presentationDetents([.height(400)])
+            .presentationDetents([.medium])
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         withAnimation {
                             initialDate = selectedDate
-                            print(initialDate?.formatted(date: .long, time: .omitted) ?? "No date")
                         }
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .destructiveAction) {
+                    Button("Clear") {
+                        withAnimation {
+                            initialDate = nil
+                        }
                         dismiss()
                     }
                 }

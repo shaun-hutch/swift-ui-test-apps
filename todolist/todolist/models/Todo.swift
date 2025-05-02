@@ -35,8 +35,8 @@ final class Todo: Identifiable {
 
 extension Todo {
     static var SampleData = [
-        Todo(text: "test"),
-        Todo(text: "test2"),
-        Todo(text: "test3")
+        Todo(dueDate: Date(timeIntervalSinceNow: 3600), text: "test"),
+        Todo(dueDate: Date(), text: "test2"),
+        Todo(dueDate: Date(), text: "test3")
     ]    
 }
