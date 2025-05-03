@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
 
 @Model
 final class Todo: Identifiable {
@@ -18,6 +19,38 @@ final class Todo: Identifiable {
     
     // property to sort boolean with
     var isCompletedInt: Int
+    
+    @Transient
+    var priorityColor: Color {
+        switch priority {
+        case .high:
+            return .red
+        case .medium:
+            return .orange
+        case .low:
+            return .green
+        }
+    }
+    
+    @Transient
+    var priority: TodoPriority {
+        guard let date = self.dueDate else {
+            return .low
+        }
+        
+        let now = Date()
+        guard let oneWeekFromNow = Calendar.current.date(byAdding: .day, value: 7, to: now) else {
+            return .low
+        }
+        
+        if date > oneWeekFromNow {
+            return .low
+        } else if date >= now && date <= oneWeekFromNow {
+            return .medium
+        } else {
+            return .high
+        }
+    }
 
     func updateLastModifiedDate() {
         lastModifiedDate = Date()
@@ -33,10 +66,16 @@ final class Todo: Identifiable {
     }
 }
 
+enum TodoPriority: String, CaseIterable {
+    case high = "high"
+    case medium = "medium"
+    case low = "low"
+}
+
 extension Todo {
     static var SampleData = [
         Todo(dueDate: Date(timeIntervalSinceNow: 3600), text: "test"),
         Todo(dueDate: Date(), text: "test2"),
         Todo(dueDate: Date(), text: "test3")
-    ]    
+    ]
 }

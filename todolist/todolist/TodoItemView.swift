@@ -70,6 +70,7 @@ struct TodoItemView: View {
                 .font(.footnote)
             Image(systemName: todoItem.dueDate != nil ? "bell.badge.fill" : "bell")
         }
+        .foregroundStyle(todoItem.priorityColor)
         .buttonStyle(.borderless)
     }
     
