@@ -21,12 +21,13 @@ struct TodoItemView: View {
     
     var body: some View {
         VStack {
-            HStack {
+            HStack(alignment: .top) {
                 toggleButton
                 textField
                 Spacer()
                 dateButton
             }
+            .padding(.top, 4)
         }
         .sheet(isPresented: $datePickerOpened) {
             TodoDatePicker(initialDate: $todoItem.dueDate)
@@ -42,9 +43,8 @@ struct TodoItemView: View {
     }
     
     var textField: some View {
-        TextField("Add Todo", text: $todoItem.text)
+        TextField("Add Todo", text: $todoItem.text, axis: .vertical)
             .focused($focusedID, equals: todoItem.id)
-            .submitLabel(.done)
             .onSubmit {
                 focusedID = nil
             }

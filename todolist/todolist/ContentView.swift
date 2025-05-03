@@ -10,11 +10,21 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) var context
-    @Query(sort: [
-        SortDescriptor(\Todo.isCompletedInt, order: .reverse),
+    @Query(filter: #Predicate<Todo> { todo in
+        todo.isCompleted == false
+    }, sort: [
         SortDescriptor(\Todo.dueDate, order: .forward),
-    ]) var todos: [Todo]
+    ]) var incompleteTodos: [Todo]
+    
+    @Query(filter: #Predicate<Todo> { todo in
+        todo.isCompleted
+    }, sort: [
+        SortDescriptor(\Todo.dueDate, order: .forward),
+    ]) var completedTodos: [Todo]
+    
+    
     @FocusState private var focusedUUID: UUID?
+    
     
     var body: some View {
         NavigationStack {
@@ -25,24 +35,42 @@ struct ContentView: View {
                 withAnimation {
                     focusChangeHandler(oldValue: oldValue, newValue: newValue)
                 }
-
             }
             .navigationTitle("Todo List")
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        focusedUUID = nil
+                    }
+                }
+            }
         }
+        
+        
     }
     
     var list: some View {
         List {
-            ForEach(todos) { item in
-                TodoItemView(todoItem: item, focusedID: $focusedUUID)
-            }
-            .onDelete { indexSet in
-                for index in indexSet {
-                    let todoToDelete = todos[index]
-                    context.delete(todoToDelete)
+            Section(header: Text("Completed")) {
+                ForEach(completedTodos) { item in
+                    TodoItemView(todoItem: item, focusedID: $focusedUUID)
+                }
+                .onDelete { indexSet in
+                    deleteTodo(set: indexSet, todos: completedTodos)
                 }
             }
-            addButton
+            Section(header: Text("Incomplete")) {
+                ForEach(incompleteTodos) { item in
+                    TodoItemView(todoItem: item, focusedID: $focusedUUID)
+                }
+                .onDelete { indexSet in
+                    deleteTodo(set: indexSet, todos: incompleteTodos)
+                }
+            }
+            Section(header: Text("")) {
+                addButton
+            }
         }
     }
     
@@ -67,19 +95,26 @@ struct ContentView: View {
         }
     }
     
+    private func deleteTodo(set: IndexSet, todos: [Todo]) {
+        for index in set {
+            let todoToDelete = todos[index]
+            context.delete(todoToDelete)
+        }
+    }
+    
     // save on focus loss
     private func focusChangeHandler(oldValue: UUID?, newValue: UUID?) {
         print("focus handler")
         
         // update the previous todo last modified date on focus loss
         if let oldValue {
-            let todoToSave = todos.first { $0.id == oldValue }
+            let todoToSave = (incompleteTodos + completedTodos).first { $0.id == oldValue }
             if let todoToSave {
                 print("updating last modified")
                 todoToSave.updateLastModifiedDate()
             }
         }
-
+    
         do {
             try context.save()
         } catch {
