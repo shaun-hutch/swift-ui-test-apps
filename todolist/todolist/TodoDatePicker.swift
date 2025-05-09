@@ -22,6 +22,9 @@ struct TodoDatePicker: View {
             VStack {
                 DatePicker("", selection: $selectedDate, displayedComponents: .date)
                     .datePickerStyle(.graphical)
+                if initialDate != nil {
+                    clearButton
+                }
             }
             .onAppear {
                 if let initialDate {
@@ -31,28 +34,66 @@ struct TodoDatePicker: View {
             .presentationDetents([.medium])
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        withAnimation {
-                            initialDate = selectedDate
-                        }
-                        dismiss()
-                    }
+                    saveButton
                 }
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .destructiveAction) {
-                    Button("Clear") {
-                        withAnimation {
-                            initialDate = nil
-                        }
-                        dismiss()
-                    }
+                    cancelButton
                 }
             }
         }
+        .background(.ultraThinMaterial)
+    }
+    
+    var clearButton: some View {
+        Button(action: {
+            withAnimation {
+                initialDate = nil
+                dismiss()
+            }
+        }) {
+            Image(systemName: "calendar.badge.minus")
+            Text("Remove")
+        }
+        .padding(.vertical, 8)
+        .padding(.horizontal, 8)
+        .background(Color.red.opacity(0.1))
+        .foregroundColor(.red)
+        .clipShape(Capsule())
+    }
+    
+    var saveButton: some View {
+        Button(action: {
+            withAnimation {
+                initialDate = selectedDate
+                dismiss()
+            }
+        }) {
+            HStack(alignment: .center) {
+                Image(systemName: "calendar.badge.plus")
+                Text("Save")
+            }
+        }
+        .padding(.vertical, 4)
+        .padding(.trailing, 8)
+        .background(Color.green.opacity(0.1))
+        .foregroundColor(.green)
+        .clipShape(Capsule())
+    }
+    
+    var cancelButton: some View {
+        Button(action: {
+            withAnimation {
+                dismiss()
+            }
+        }) {
+            Image(systemName: "xmark.app")
+            Text("Cancel")
+        }
+        .padding(.vertical, 4)
+        .padding(.leading, 6)
+        .background(Color.gray.opacity(0.1))
+        .foregroundColor(.gray)
+        .clipShape(Capsule())
     }
 }
 

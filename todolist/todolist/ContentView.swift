@@ -37,17 +37,7 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("Todo List")
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("Done") {
-                        focusedUUID = nil
-                    }
-                }
-            }
         }
-        
-        
     }
     
     var list: some View {
