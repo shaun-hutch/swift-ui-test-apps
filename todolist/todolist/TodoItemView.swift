@@ -30,7 +30,7 @@ struct TodoItemView: View {
             .padding(.top, 4)
         }
         .sheet(isPresented: $datePickerOpened) {
-            TodoDatePicker(initialDate: $todoItem.dueDate)
+            TodoDateTimePicker(initialDateTime: $todoItem.dueDate)
         }
         .onChange(of: datePickerOpened) {
             if (datePickerOpened == false) {
@@ -66,7 +66,7 @@ struct TodoItemView: View {
         Button(action: {
             datePickerOpened.toggle()
         }) {
-            Text(todoItem.dueDate?.formatted(Date.FormatStyle.dateTime.day().month()) ?? "")
+            Text(todoItem.dueDate?.formatted(Date.FormatStyle.dateTime.hour().minute() .day().month()) ?? "")
                 .font(.footnote)
             Image(systemName: todoItem.dueDate != nil ? "bell.badge.fill" : "bell")
         }

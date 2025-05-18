@@ -7,55 +7,58 @@
 
 import SwiftUI
 
-struct TodoDatePicker: View {
+struct TodoDateTimePicker: View {
     
     // value from the todo data
-    @Binding var initialDate: Date?
+    @Binding var initialDateTime: Date?
     
-    @State private var selectedDate: Date = Date()
+    @State private var selectedDateTime: Date = Date.todayAt(hour: 12)
     
     @Environment(\.dismiss) private var dismiss
     
     
+    
     var body: some View {
-        NavigationStack {
-            VStack {
-                DatePicker("", selection: $selectedDate, displayedComponents: .date)
-                    .datePickerStyle(.graphical)
-                if initialDate != nil {
-                    clearButton
-                }
+        VStack {
+            HStack {
+                cancelButton
+                Spacer()
+                saveButton
             }
-            .onAppear {
-                if let initialDate {
-                    selectedDate = initialDate
-                }
-            }
-            .presentationDetents([.medium])
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    saveButton
-                }
-                ToolbarItem(placement: .cancellationAction) {
-                    cancelButton
-                }
+            .padding()
+            DatePicker("", selection: $selectedDateTime, displayedComponents: [.date, .hourAndMinute])
+                .datePickerStyle(.graphical)
+            if initialDateTime != nil {
+                clearButton
             }
         }
-        .background(.ultraThinMaterial)
+        .presentationDetents([.height(550)])
+        .onAppear {
+            if let initialDateTime {
+                selectedDateTime = initialDateTime
+            }
+        }
+        
+        // have this set for only pickers on this view, otherwise the entire app would have this as its interval
+        .onAppear {
+            UIDatePicker.appearance().minuteInterval = 5
+        }
+        .onDisappear {
+            UIDatePicker.appearance().minuteInterval = 1
+        }
     }
     
     var clearButton: some View {
         Button(action: {
             withAnimation {
-                initialDate = nil
+                initialDateTime = nil
                 dismiss()
             }
         }) {
             Image(systemName: "calendar.badge.minus")
             Text("Remove")
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 8)
+        .padding(8)
         .background(Color.red.opacity(0.1))
         .foregroundColor(.red)
         .clipShape(Capsule())
@@ -64,7 +67,7 @@ struct TodoDatePicker: View {
     var saveButton: some View {
         Button(action: {
             withAnimation {
-                initialDate = selectedDate
+                initialDateTime = selectedDateTime
                 dismiss()
             }
         }) {
@@ -73,8 +76,7 @@ struct TodoDatePicker: View {
                 Text("Save")
             }
         }
-        .padding(.vertical, 4)
-        .padding(.trailing, 8)
+        .padding(8)
         .background(Color.green.opacity(0.1))
         .foregroundColor(.green)
         .clipShape(Capsule())
@@ -89,8 +91,7 @@ struct TodoDatePicker: View {
             Image(systemName: "xmark.app")
             Text("Cancel")
         }
-        .padding(.vertical, 4)
-        .padding(.leading, 6)
+        .padding(8)
         .background(Color.gray.opacity(0.1))
         .foregroundColor(.gray)
         .clipShape(Capsule())
@@ -98,5 +99,5 @@ struct TodoDatePicker: View {
 }
 
 #Preview {
-    TodoDatePicker(initialDate: .constant(Date()))
+    TodoDateTimePicker(initialDateTime: .constant(nil))
 }
