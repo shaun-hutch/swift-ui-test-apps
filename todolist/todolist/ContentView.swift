@@ -38,6 +38,9 @@ struct ContentView: View {
             }
             .navigationTitle("Todo List")
         }
+        .onAppear {
+            requestNotificationPermissions()
+        }
     }
     
     var list: some View {

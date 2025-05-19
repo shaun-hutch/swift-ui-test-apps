@@ -16,8 +16,6 @@ struct TodoDateTimePicker: View {
     
     @Environment(\.dismiss) private var dismiss
     
-    
-    
     var body: some View {
         VStack {
             HStack {
@@ -68,6 +66,10 @@ struct TodoDateTimePicker: View {
         Button(action: {
             withAnimation {
                 initialDateTime = selectedDateTime
+                
+                
+                
+                
                 dismiss()
             }
         }) {

@@ -51,6 +51,17 @@ final class Todo: Identifiable {
             return .high
         }
     }
+    
+    @Transient
+    var formattedDueDate: String {
+        guard let date = self.dueDate else { return "" }
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM, h:mma"
+        formatter.amSymbol = "am"
+        formatter.pmSymbol = "pm"
+        
+        return formatter.string(from: date)
+    }
 
     func updateLastModifiedDate() {
         lastModifiedDate = Date()

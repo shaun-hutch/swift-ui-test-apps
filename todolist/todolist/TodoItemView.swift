@@ -36,6 +36,12 @@ struct TodoItemView: View {
             if (datePickerOpened == false) {
                 withAnimation {
                     todoItem.updateLastModifiedDate()
+                    
+                    
+                    cancelNotification(id: todoItem.id)
+                    if (todoItem.dueDate != nil) {
+                        scheduleNotification(for: todoItem)
+                    }
                 }
             }
         }
@@ -66,7 +72,7 @@ struct TodoItemView: View {
         Button(action: {
             datePickerOpened.toggle()
         }) {
-            Text(todoItem.dueDate?.formatted(Date.FormatStyle.dateTime.hour().minute() .day().month()) ?? "")
+            Text(todoItem.formattedDueDate)
                 .font(.footnote)
             Image(systemName: todoItem.dueDate != nil ? "bell.badge.fill" : "bell")
         }
