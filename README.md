@@ -9,4 +9,4 @@ A small todo list style app, leveraging the following:
 - **Push notifications** to remind the user when a Todo item is due
 - **Basic UI** - lists, date time picker
 
-- ![Todo List](https://github.com/user-attachments/assets/5725e907-7f4c-40d0-8b25-f362f3a7d4d1)
+![Todo List](https://github.com/user-attachments/assets/5725e907-7f4c-40d0-8b25-f362f3a7d4d1)
