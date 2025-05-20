@@ -26,16 +26,24 @@ func scheduleNotification(for todo: Todo) {
     content.subtitle = "Due: \(todo.formattedDueDate)"
     content.sound = .default
     
+    let oneHourContent = UNMutableNotificationContent()
+    oneHourContent.title = todo.text
+    oneHourContent.subtitle = "Due at: \(todo.formattedDueDate)"
+    oneHourContent.sound = .default
     
+    // extract out the date into components
     let dueDateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
-    let oneHourReminderComponents = Calendar.current.date(byAdding: .hour, value: -1, to: date)
+    
+    // subtract 1 hour from the date
+    guard let oneHourReminderDate = Calendar.current.date(byAdding: .hour, value: -1, to: date) else { return }
+    let oneHourReminderDateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: oneHourReminderDate)
     
     // set a notification 1 hour before then on the due date
     let dueDateTrigger = UNCalendarNotificationTrigger(dateMatching: dueDateComponents, repeats: false)
-    let oneHourReminderTrigger = UNCalendarNotificationTrigger(dateMatching: dueDateComponents, repeats: false)
+    let oneHourReminderTrigger = UNCalendarNotificationTrigger(dateMatching: oneHourReminderDateComponents, repeats: false)
     
     let dueDateRequest = UNNotificationRequest(identifier: todo.id.uuidString, content: content, trigger: dueDateTrigger)
-    let oneHourReminderRequest = UNNotificationRequest(identifier: todo.id.uuidString, content: content, trigger: oneHourReminderTrigger)
+    let oneHourReminderRequest = UNNotificationRequest(identifier: "\(todo.id.uuidString)_oneHour", content: oneHourContent, trigger: oneHourReminderTrigger)
     
     UNUserNotificationCenter.current().add(dueDateRequest) { error in
         if let error = error {
