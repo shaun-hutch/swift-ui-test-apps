@@ -17,7 +17,7 @@ func requestNotificationPermissions() {
     }
 }
 
-func scheduleNotification(for todo: Todo) {
+func scheduleNotifications(for todo: Todo) {
     guard let date = todo.dueDate else { return }
     
     let content = UNMutableNotificationContent()
@@ -59,6 +59,6 @@ func scheduleNotification(for todo: Todo) {
 }
 
 
-func cancelNotification(id: UUID) {
-    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
+func cancelNotifications(ids: [String]) {
+    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ids)
 }

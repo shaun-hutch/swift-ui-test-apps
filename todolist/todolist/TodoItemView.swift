@@ -36,11 +36,9 @@ struct TodoItemView: View {
             if (datePickerOpened == false) {
                 withAnimation {
                     todoItem.updateLastModifiedDate()
-                    
-                    
-                    cancelNotification(id: todoItem.id)
+                    cancelNotifications(ids: [todoItem.id.uuidString, "\(todoItem.id.uuidString)_oneHour"])
                     if (todoItem.dueDate != nil) {
-                        scheduleNotification(for: todoItem)
+                        scheduleNotifications(for: todoItem)
                     }
                 }
             }
@@ -60,6 +58,9 @@ struct TodoItemView: View {
         Button(action: {
             withAnimation {
                 updateToggle()
+                if (todoItem.isCompleted) {
+                    cancelNotifications(ids: [todoItem.id.uuidString, "\(todoItem.id.uuidString)_oneHour"])
+                }
             }
         }) {
             Image(systemName: todoItem.isCompleted ? "checkmark.circle.fill" : "circle")
