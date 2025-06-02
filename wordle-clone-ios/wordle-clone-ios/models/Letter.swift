@@ -7,17 +7,17 @@
 
 import SwiftUI
 
-struct Letter {
-    var Character: Character
-    var Position: Int
-    var Status: LetterStatus
+struct Letter: Hashable {
+    var character: Character?
+    var position: Int
+    var status: LetterStatus
     
-    var CharString: String {
-        "\(Character)"
+    var charString: String {
+        character.map { String($0) } ?? ""
     }
     
-    var LetterBackgroundColor: Color {
-        switch Status {
+    var letterBackgroundColor: Color {
+        switch status {
         case .correctPosition:
             return .green
         case .correctLetter:
@@ -27,10 +27,29 @@ struct Letter {
         }
     }
     
-    init(Character: Character, Position: Int, Status: LetterStatus) {
-        self.Character = Character
-        self.Position = Position
-        self.Status = Status
+    init(character: Character, position: Int, status: LetterStatus) {
+        self.character = character
+        self.position = position
+        self.status = status
     }
     
+}
+
+extension Letter {
+    static var Example =
+    [
+        Letter(character: "A", position: 0, status: .correctPosition),
+        Letter(character: "E", position: 1, status: .incorrectLetter),
+        Letter(character: "I", position: 2, status: .correctLetter),
+        Letter(character: "O", position: 3, status: .incorrectLetter),
+        Letter(character: "U", position: 4, status: .correctLetter),
+    ]
+    
+    static var Board = [
+        Example,
+        Example,
+        Example,
+        Example,
+        Example
+    ]
 }

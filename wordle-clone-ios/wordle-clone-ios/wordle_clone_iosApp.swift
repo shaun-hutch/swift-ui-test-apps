@@ -11,7 +11,7 @@ import SwiftUI
 struct wordle_clone_iosApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(board: Letter.Board)
         }
     }
 }

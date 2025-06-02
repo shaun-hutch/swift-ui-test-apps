@@ -8,17 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
+    var board: [[Letter]]
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            ForEach(board, id: \.self) { word in
+                WordView(word: word)
+            }
         }
-        .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    ContentView(board: Letter.Board)
 }
