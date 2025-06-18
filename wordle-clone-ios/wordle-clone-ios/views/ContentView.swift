@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
-    var board: [[Letter]]
+    
+    var game: Game = .init(answer: "SWORD")
     
     var body: some View {
         VStack {
-            ForEach(board, id: \.self) { word in
-                WordView(word: word)
+            ForEach(game.attempts, id: \.self) { attempt in
+                WordView(word: attempt)
             }
         }
     }
 }
 
 #Preview {
-    ContentView(board: Letter.Board)
+    ContentView(game: .init(answer: "SWORD"))
 }

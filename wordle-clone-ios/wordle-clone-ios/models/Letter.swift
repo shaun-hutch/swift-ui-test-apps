@@ -22,12 +22,12 @@ struct Letter: Hashable {
             return .green
         case .correctLetter:
             return .yellow
-        case .incorrectLetter:
+        case .incorrectLetter, .emptyLetter:
             return .gray
         }
     }
     
-    init(character: Character, position: Int, status: LetterStatus) {
+    init(character: Character? = nil, position: Int, status: LetterStatus) {
         self.character = character
         self.position = position
         self.status = status
@@ -36,20 +36,7 @@ struct Letter: Hashable {
 }
 
 extension Letter {
-    static var Example =
-    [
-        Letter(character: "A", position: 0, status: .correctPosition),
-        Letter(character: "E", position: 1, status: .incorrectLetter),
-        Letter(character: "I", position: 2, status: .correctLetter),
-        Letter(character: "O", position: 3, status: .incorrectLetter),
-        Letter(character: "U", position: 4, status: .correctLetter),
-    ]
-    
-    static var Board = [
-        Example,
-        Example,
-        Example,
-        Example,
-        Example
-    ]
+    static func EmptyLetter(position: Int) -> Letter {
+        Letter(position: position, status: .emptyLetter)
+    }
 }

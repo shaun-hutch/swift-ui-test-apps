@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct WordView: View {
-    var word: [Letter]
+    var word: Attempt
     
     var body: some View {
         HStack {
-            ForEach(word, id: \.self) { letter in
+            ForEach(word.letters, id: \.self) { letter in
                 LetterboxView(letter: letter)
             }
         }
@@ -20,5 +20,5 @@ struct WordView: View {
 }
 
 #Preview {
-    WordView(word: Letter.Example)
+    WordView(word: Attempt.Example)
 }
