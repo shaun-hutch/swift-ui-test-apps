@@ -22,7 +22,7 @@ struct Letter: Hashable {
             return .green
         case .correctLetter:
             return .yellow
-        case .incorrectLetter, .emptyLetter:
+        case .incorrectLetter, .uncheckedLetter:
             return .gray
         }
     }
@@ -37,6 +37,6 @@ struct Letter: Hashable {
 
 extension Letter {
     static func EmptyLetter(position: Int) -> Letter {
-        Letter(position: position, status: .emptyLetter)
+        Letter(position: position, status: .uncheckedLetter)
     }
 }

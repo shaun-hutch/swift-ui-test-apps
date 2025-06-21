@@ -9,48 +9,41 @@ struct Game {
     
     var answer: String
     var attempts: [Attempt]
-    
-    var splitAnswer: [Character] {
-        Array(answer)
-    }
+    var remainingLetters: [Character]
     
     init(answer: String) {
         self.answer = answer
         self.attempts = Attempt.BlankBoard
+        self.remainingLetters = Array(answer)
     }
     
-    mutating func Compare(_ guess: String, number: Int) {
-        let splitInput = Array(guess)
-                
-        guard splitInput.count == 5, splitAnswer.count == 5 else {
-            return
-        }
-        
-        var remainingLetters = splitAnswer
-        var letters: [Letter] = self.attempts[number].letters
-        
-        // First pass: check for correct position
-        for i in 0 ..< splitInput.count {
-            if splitInput[i] == splitAnswer[i] {
-                letters[i] = Letter(character: splitInput[i], position: i, status: .correctPosition)
-                if let index = remainingLetters.firstIndex(of: splitInput[i]) {
-                    remainingLetters.remove(at: index)
+    mutating func Compare(attemptNumber: Int) {
+        var letters = self.attempts[attemptNumber].letters
+
+        // First pass: correct position
+        for i in 0 ..< 5 {
+            if let char = letters[i].character {
+                if char == remainingLetters[i] {
+                    letters[i].status = .correctPosition
+                    if let index = remainingLetters.firstIndex(of: char) {
+                        remainingLetters.remove(at: index)
+                    }
                 }
             }
         }
-        
-        // Second pass: check for correct letter but wrong position
-        for i in 0 ..< splitInput.count {
-            if letters[i].character == nil {
-                if let index = remainingLetters.firstIndex(of: splitInput[i]) {
-                    letters[i] = Letter(character: splitInput[i], position: i, status: .correctLetter)
+
+        // Second pass: correct letter wrong position
+        for i in 0 ..< 5 {
+            if let char = letters[i].character {
+                if let index = remainingLetters.firstIndex(of: char) {
+                    letters[i].status = .correctLetter
                     remainingLetters.remove(at: index)
                 } else {
-                    letters[i] = Letter(character: splitInput[i], position: i, status: .incorrectLetter)
+                    letters[i].status = .incorrectLetter
                 }
             }
         }
-        
-        attempts[number] = Attempt(letters: letters.compactMap { $0 })
+
+        attempts[attemptNumber] = Attempt(letters: letters)
     }
 }

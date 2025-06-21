@@ -30,5 +30,7 @@ struct LetterboxView: View {
     LetterboxView(letter: Letter(character: "A", position: 0, status: .correctLetter))
     LetterboxView(letter: Letter(character: "B", position: 1, status: .correctPosition))
     LetterboxView(letter: Letter(character: "C", position: 2, status: .incorrectLetter))
+    LetterboxView(letter: Letter(character: "C", position: 2, status: .uncheckedLetter))
+    LetterboxView(letter: Letter(position: 2, status: .uncheckedLetter))
 }
 

@@ -6,5 +6,5 @@
 //
 
 enum LetterStatus: Int, CaseIterable {
-    case correctPosition, correctLetter, incorrectLetter, emptyLetter
+    case correctPosition, correctLetter, incorrectLetter, uncheckedLetter
 }

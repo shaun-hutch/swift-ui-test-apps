@@ -19,7 +19,7 @@ extension Attempt {
             Letter(character: "A", position: 0, status: .correctPosition),
             Letter(character: "E", position: 1, status: .incorrectLetter),
             Letter(character: "I", position: 2, status: .correctLetter),
-            Letter(position: 3, status: .emptyLetter),
+            Letter(position: 3, status: .uncheckedLetter),
             Letter(character: "U", position: 4, status: .correctLetter),
         ])
 
