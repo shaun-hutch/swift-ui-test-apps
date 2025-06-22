@@ -9,6 +9,9 @@ import SwiftUI
 
 struct LetterboxView: View {
     var letter: Letter
+    var width: CGFloat? = 50
+    var height: CGFloat? = 50
+    var font: Font? = .largeTitle
     
     var body: some View {
         ZStack {
@@ -18,11 +21,14 @@ struct LetterboxView: View {
                 .cornerRadius(6)
             
             Text(letter.charString)
-                .font(.largeTitle)
+                .font(font)
                 .fontWeight(.bold)
             
         }
-        .frame(width: 50, height: 50)
+        .frame(width: width, height: height)
+        .onChange(of: letter.character) {
+            print("Letter: \(letter.charString)")
+        }
     }
 }
 

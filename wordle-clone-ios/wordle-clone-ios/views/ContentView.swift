@@ -34,6 +34,7 @@ struct ContentView: View {
             .keyboardType(.alphabet)
             .submitLabel(.done)
             .opacity(0)
+            .autocorrectionDisabled(true)
             .frame(width: 0, height: 0)
             .onChange(of: input) { oldValue, newValue in
                 print("input changed, old: \(oldValue), new: \(newValue), current position: \(currentPosition)")

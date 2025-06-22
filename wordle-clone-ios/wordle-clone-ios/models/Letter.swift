@@ -13,7 +13,7 @@ struct Letter: Hashable {
     var status: LetterStatus
     
     var charString: String {
-        character.map { String($0) } ?? ""
+        character.map { String($0) } ?? "-"
     }
     
     var letterBackgroundColor: Color {
