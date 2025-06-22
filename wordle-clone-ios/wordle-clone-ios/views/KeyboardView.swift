@@ -8,17 +8,15 @@
 import SwiftUI
 
 struct KeyboardView: View {
-    var topKeys: [Character] = ["Q","W","E","R","T","Y","U","I","O","P"]
-    var middleKeys: [Character] = ["A","S","D","F","G","H","J","K","L"]
-    var bottomKeys: [Character] = ["⏎","Z","X","C","V","B","N","M","␡"] // '.' is enter, ',' is backspace
+    
 
     var keyPress: (Character) -> Void
     
     var body: some View {
         VStack {
-            keyRow(topKeys)
-            keyRow(middleKeys)
-            keyRow(bottomKeys)
+            keyRow(Constants.topKeys)
+            keyRow(Constants.middleKeys)
+            keyRow(Constants.bottomKeys)
         }
     }
     

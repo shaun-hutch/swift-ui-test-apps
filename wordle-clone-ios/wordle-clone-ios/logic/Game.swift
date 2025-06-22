@@ -9,7 +9,7 @@ struct Game {
     
     var answer: String
     var attempts: [Attempt]
-    var remainingLetters: [Character]
+    var remainingLetters: [Character?]
     
     init(answer: String) {
         self.answer = answer
@@ -26,7 +26,7 @@ struct Game {
                 if char == remainingLetters[i] {
                     letters[i].status = .correctPosition
                     if let index = remainingLetters.firstIndex(of: char) {
-                        remainingLetters.remove(at: index)
+                        remainingLetters[i] = nil
                     }
                 }
             }
