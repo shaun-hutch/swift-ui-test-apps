@@ -14,6 +14,9 @@ struct ContentView: View {
     
     @State private var game: Game = .init(answer: "SWORD")
     
+    @State private var isSharing: Bool = false
+    @State private var shareText: String = ""
+    
     var body: some View {
         VStack {
             VStack {
@@ -44,9 +47,15 @@ struct ContentView: View {
                 }
                 
                 Button("Share") {
-                    
+                    shareText = generateShareText()
+                    isSharing = true
                 }
             }
+        }
+        .sheet(isPresented: $isSharing) {
+            ActivityView(activityItems: [shareText])
+                .presentationDetents([.medium])
+                .presentationBackground(.ultraThinMaterial)
         }
     }
     
@@ -72,6 +81,27 @@ struct ContentView: View {
             game.attempts[currentAttempt].letters[currentPosition].character = key
             currentPosition += 1
         }
+    }
+    
+    func generateShareText() -> String {
+        var output = game.hasWon ? "I solved the Wordle!\n" : "I couldn't solve the Wordle.\n"
+
+        for attempt in game.attempts {
+            for letter in attempt.letters {
+                switch letter.status {
+                case .correctPosition:
+                    output += "🟩"
+                case .correctLetter:
+                    output += "🟨"
+                case .incorrectLetter:
+                    output += "⬜️"
+                default:
+                    break
+                }
+            }
+            output += "\n"
+        }
+        return output
     }
 }
 
