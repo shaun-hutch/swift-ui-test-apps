@@ -10,10 +10,11 @@ import SwiftUI
 struct KeyboardView: View {
     
 
+    var keyStatuses: [Character : LetterStatus]
     var keyPress: (Character) -> Void
     
     var body: some View {
-        VStack {
+        VStack(spacing: 4) {
             keyRow(Constants.topKeys)
             keyRow(Constants.middleKeys)
             keyRow(Constants.bottomKeys)
@@ -21,21 +22,28 @@ struct KeyboardView: View {
     }
     
     func keyRow(_ keys: [Character]) -> some View {
-        HStack {
+        HStack(spacing: 4) {
             ForEach(keys, id: \.self) { key in
-                LetterboxView(letter: Letter.init(character: key, position: -1, status: .uncheckedLetter), width: 30, height: 40, font: .title2)
+                LetterboxView(letter: Letter.init(character: key, position: -1, status: keyStatuses[key, default: .uncheckedLetter]), width: 32, height: 45, font: .title2)
                     .onTapGesture {
                         keyPress(key)
                     }
             }
         }
     }
-    
 }
 
 
 #Preview {
-    KeyboardView { char in
+    KeyboardView(
+        keyStatuses: [
+            "A": .correctPosition,
+            "S": .correctLetter,
+            "D": .incorrectLetter,
+            "L": .correctLetter,
+            "E": .uncheckedLetter
+        ]
+    ) { char in
         print("character pressed: \(char)")
     }
 }

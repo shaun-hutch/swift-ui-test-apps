@@ -22,8 +22,10 @@ struct Letter: Hashable {
             return .green
         case .correctLetter:
             return .yellow
-        case .incorrectLetter, .uncheckedLetter:
+        case .uncheckedLetter:
             return .gray
+        case .incorrectLetter:
+            return Color(white: 0.2)
         }
     }
     

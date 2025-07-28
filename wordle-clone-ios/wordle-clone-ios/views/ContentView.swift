@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    @State private var input: String = ""
     @State private var currentAttempt: Int = 0
     @State private var currentPosition: Int = 0
+    @State private var isGameEnded: Bool = false
     
     @State private var game: Game = .init(answer: "SWORD")
     
@@ -22,23 +21,47 @@ struct ContentView: View {
                     WordView(word: attempt)
                 }
             }
-            .padding(.top, 50)
+            .padding(.top, 70)
             
             Spacer()
-            KeyboardView { char in
+            KeyboardView(keyStatuses: game.keyboardLetterStatuses) { char in
                 onKeyPress(char)
             }
-            .padding(.bottom, 50)
+            .disabled(isGameEnded)
+            .padding(.bottom, 70)
             
+            if (isGameEnded) {
+                Text(game.hasWon ? "You win!" : "You lose!")
+                    .font(.largeTitle)
+                    .foregroundColor(game.hasWon ? .green : .red)
+                
+                Button("Reset") {
+                    // choose another word
+                    game = .init(answer: "PLONK")
+                    currentAttempt = 0
+                    currentPosition = 0
+                    isGameEnded = false
+                }
+                
+                Button("Share") {
+                    
+                }
+            }
         }
     }
     
     func onKeyPress(_ key: Character) {
-        print("key pressed: \(key), position: \(currentPosition)")
+        print("key pressed: \(key), position: \(currentPosition), current attempt: \(currentAttempt)")
         if (currentPosition == 5 && key == "⏎") {
             currentPosition = 0
             game.Compare(attemptNumber: currentAttempt)
             currentAttempt += 1
+            
+            // check if game has been won
+            if (game.gameEnded) {
+                isGameEnded = true
+            }
+            
         } else if (0...5).contains(currentPosition) && key == "␡" {
             if (currentPosition > 0) {
                 currentPosition -= 1
